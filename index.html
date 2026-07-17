@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ════════════════════════════════════════════════════════════════
+     SZABLON LP — KONSULTACJA DEPILACJI LASEROWEJ · styl czytelny, „beauty/booking"
+     Czysty, zaokrąglony, znajomy jak aplikacja do rezerwacji · premium, ale przede wszystkim CZYTELNY
+     Autor systemu: Rafał Małota / Socialise · jeden plik na GitHub Pages
+
+     >>> PODMIENIASZ per salon (Find & Replace "[[...]]") + blok CONFIG (JS, na dole):
+         Remedy Warszawa Grochowska 75, Praga-Południe +48 500 000 000 kontakt@remedy.pl # [[X]] [[od XXX]]
+     ════════════════════════════════════════════════════════════════ -->
+<title>Depilacja laserowa — konsultacja diagnostyczna | Remedy</title>
+<meta name="description" content="Konsultacja diagnostyczna depilacji laserowej w Warszawa: analiza skóry i włosa, próba laserowa, indywidualny plan zabiegów. Umów dogodny termin online.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* ════════ TOKENS ════════ */
+:root{
+  --bg:#F7F4F0; --bg-2:#FBF9F6; --card:#FFFFFF;
+  --ink:#262229; --ink-2:#3B3640; --muted:#6F6975; --muted-2:#9A95A1;
+  --plum:#6A4A63; --plum-d:#543A4F; --plum-dd:#3E2B3A; --rose:#B57E94; --blush:#F3EBEF; --blush-2:#FAF5F7;
+  --line:#ECE6E2; --line-2:#F3EEEA;
+  --sh-sm:0 2px 12px rgba(54,38,52,.05);
+  --sh:0 8px 30px -8px rgba(54,38,52,.10);
+  --sh-lg:0 26px 60px -24px rgba(54,38,52,.22);
+  --r:12px; --r-lg:18px; --r-xl:26px; --max:1140px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:400;background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;line-height:1.12;letter-spacing:-.02em;color:var(--ink)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--plum);outline-offset:3px;border-radius:4px}
+.on-plum :focus-visible{outline-color:#fff}
+.skip-link{position:absolute;left:16px;top:-60px;background:var(--plum);color:#fff;padding:12px 20px;border-radius:var(--r);font-size:.85rem;font-weight:600;z-index:1000;transition:top .2s}
+.skip-link:focus{top:16px}
+
+/* LAYOUT */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 32px}
+.pad{padding:clamp(64px,8vw,108px) 0}
+
+/* TYPE */
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.02em;color:var(--plum);background:var(--blush);padding:7px 15px;border-radius:100px;margin-bottom:20px}
+.on-plum .eyebrow{color:#fff;background:rgba(255,255,255,.16)}
+.display{font-size:clamp(2.3rem,5vw,3.8rem);font-weight:800;line-height:1.08;letter-spacing:-.03em;color:var(--ink)}
+.display em{font-style:normal;color:var(--plum)}
+h2.title{font-size:clamp(1.8rem,3.8vw,2.9rem);font-weight:800;line-height:1.12;letter-spacing:-.025em}
+.title em{font-style:normal;color:var(--plum)}
+.sub{font-size:clamp(1.02rem,1.25vw,1.14rem);color:var(--muted);line-height:1.68;max-width:36em;font-weight:400}
+.sub strong{color:var(--ink);font-weight:600}
+
+/* sections that sit on plum */
+.on-plum,.on-plum h1,.on-plum h2,.on-plum h3{color:#fff}
+.on-plum .title em{color:#F0DCE6}
+.on-plum .sub{color:rgba(255,255,255,.82)}
+.on-plum .sub strong{color:#fff}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55em;font-family:'Plus Jakarta Sans',sans-serif;font-size:.96rem;font-weight:600;padding:15px 28px;border-radius:100px;border:1.5px solid transparent;cursor:pointer;transition:transform .2s cubic-bezier(.22,.61,.36,1),background .2s,color .2s,border-color .2s,box-shadow .2s;min-height:52px;white-space:nowrap}
+.btn:hover{transform:translateY(-2px)}
+.btn .arr{transition:transform .2s}
+.btn:hover .arr{transform:translateX(3px)}
+.btn-dark{background:var(--plum);color:#fff;box-shadow:0 10px 26px -10px rgba(106,74,99,.6)}
+.btn-dark:hover{background:var(--plum-d)}
+.btn-light{background:#fff;color:var(--plum);box-shadow:var(--sh-sm)}
+.btn-light:hover{background:var(--blush-2)}
+.btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.45)}
+.btn-ghost:hover{background:rgba(255,255,255,.12);border-color:#fff}
+.btn-ghost-d{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn-ghost-d:hover{border-color:var(--plum);color:var(--plum)}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;background:rgba(247,244,240,.86);backdrop-filter:saturate(160%) blur(16px);-webkit-backdrop-filter:saturate(160%) blur(16px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:100%;padding:0 32px;max-width:var(--max);margin:0 auto}
+.logo{font-size:1.32rem;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.logo em{font-style:normal;color:var(--plum);font-weight:600}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:.92rem;font-weight:500;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{padding:11px 20px;font-size:.88rem;font-weight:600;min-height:0;background:var(--plum);color:#fff;border-radius:100px}
+.nav-cta:hover{background:var(--plum-d)}
+@media(max-width:780px){.nav-links a:not(.nav-cta){display:none}}
+
+/* HERO */
+.hero{background:linear-gradient(180deg,var(--blush-2),var(--bg) 70%);color:var(--ink);padding:118px 0 84px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:-160px;left:50%;transform:translateX(-50%);width:1000px;height:560px;background:radial-gradient(ellipse at center,rgba(181,126,148,.16),transparent 62%);pointer-events:none;z-index:0}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:860px;margin:0 auto}
+.hero h1{margin:6px 0 20px}
+.hero .sub{margin:0 auto 14px;max-width:30em;font-size:clamp(1.05rem,1.5vw,1.22rem)}
+.value-flag{display:inline-flex;align-items:center;gap:10px;margin:6px auto 30px;padding:11px 20px;border:1px solid var(--line);border-radius:100px;background:#fff;font-size:.92rem;color:var(--muted);box-shadow:var(--sh-sm)}
+.value-flag b{color:var(--plum);font-weight:700}
+.value-flag .strike{color:var(--muted-2);text-decoration:line-through}
+.hero-cta-row{display:flex;gap:13px;justify-content:center;flex-wrap:wrap}
+.hero-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:46px;text-align:left}
+.hstep{display:flex;gap:13px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--sh-sm)}
+.hstep .n{width:30px;height:30px;border-radius:9px;background:var(--plum);color:#fff;font-weight:800;display:grid;place-items:center;font-size:.9rem;flex:none}
+.hstep b{display:block;font-weight:700;font-size:.96rem;color:var(--ink);margin-bottom:2px}
+.hstep span{font-size:.82rem;color:var(--muted);line-height:1.4}
+.trustbar-sec{background:var(--plum)}
+.trustbar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.14);overflow:hidden}
+.trustbar .tb{background:var(--plum);padding:24px 20px;text-align:center;color:#fff}
+.trustbar .tb b{display:block;font-size:1.06rem;font-weight:700;margin-bottom:3px}
+.trustbar .tb span{font-size:.82rem;color:rgba(255,255,255,.82);line-height:1.4}
+.laser{background:var(--bg)}
+.laser-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:54px;align-items:center}
+.laser-list{list-style:none;display:grid;gap:15px;margin-top:26px}
+.laser-list li{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.laser-list .lk{width:26px;height:26px;border-radius:50%;background:var(--blush);flex:none;margin-top:2px;position:relative}
+.laser-list .lk::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-58%) rotate(-45deg);width:9px;height:5px;border-left:2px solid var(--plum);border-bottom:2px solid var(--plum)}
+.laser-list b{display:block;font-weight:700;font-size:1rem;color:var(--ink);margin-bottom:2px}
+.laser-list p{font-size:.9rem;color:var(--muted);line-height:1.5}
+.compare{background:var(--card);border:1px solid var(--line);border-radius:var(--r-xl);padding:30px;box-shadow:var(--sh-sm)}
+.cmp-head{font-size:.8rem;font-weight:700;color:var(--plum);background:var(--blush);display:inline-block;padding:6px 14px;border-radius:100px;margin-bottom:18px}
+.cmp-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);font-size:.95rem}
+.cmp-l{color:var(--ink-2)}
+.cmp-good{color:var(--plum);font-weight:700;text-align:right}
+.cmp-note{margin-top:16px;font-size:.9rem;color:var(--muted);font-style:italic;line-height:1.5}
+.price-anchor{font-size:.86rem;color:var(--muted-2);margin-bottom:2px}
+.price-anchor s{color:var(--muted-2)}
+.price-card.feat .price-anchor{color:rgba(255,255,255,.66)}
+.price-card.feat .price-anchor s{color:rgba(255,255,255,.66)}
+.price-save{display:inline-block;margin-top:10px;font-size:.8rem;font-weight:700;color:var(--plum);background:var(--blush);padding:6px 13px;border-radius:100px}
+.price-card.feat .price-save{color:#fff;background:rgba(255,255,255,.16)}
+.price-note-wrap{text-align:center;margin-bottom:28px}
+.price-note{font-size:.82rem;color:var(--plum);background:var(--blush);display:inline-block;padding:7px 16px;border-radius:100px;font-weight:600}
+.trust-item{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 26px;box-shadow:var(--sh-sm);min-width:130px}
+.trust-item .num{font-size:1.55rem;font-weight:800;line-height:1;color:var(--plum);letter-spacing:-.02em}
+.trust-item .lbl{display:block;margin-top:5px;font-size:.82rem;color:var(--muted);font-weight:500}
+
+/* PAIN */
+.pain{background:var(--card)}
+.pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.big-quote{font-size:clamp(2rem,4.4vw,3.2rem);font-weight:800;line-height:1.16;color:var(--ink);letter-spacing:-.025em}
+.big-quote span{display:block;font-size:.28em;font-weight:600;letter-spacing:.02em;color:var(--plum);margin-top:20px;background:var(--blush);padding:7px 15px;border-radius:100px;width:fit-content}
+.pain-list{list-style:none;display:grid;gap:12px;margin-top:6px}
+.pain-list li{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:18px 20px;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-lg);font-size:1rem;color:var(--ink-2)}
+.pain-list li .dot{width:26px;height:26px;border-radius:50%;background:var(--blush);color:var(--plum);display:grid;place-items:center;font-weight:700;font-size:.8rem;flex:none;margin-top:1px}
+.pain-list li .dot::before{content:'✓'}
+.pain-list li b{font-weight:700;color:var(--ink)}
+
+/* WHY */
+.why{background:var(--blush-2)}
+.why-head{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:end;margin-bottom:48px}
+.why-head .sub{margin-top:0}
+.why-list{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.why-row{display:flex;flex-direction:column;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:var(--r-xl);padding:30px;box-shadow:var(--sh-sm);transition:transform .25s,box-shadow .25s}
+.why-row:hover{transform:translateY(-3px);box-shadow:var(--sh)}
+.why-idx{width:46px;height:46px;border-radius:14px;background:var(--plum);color:#fff;display:grid;place-items:center;font-size:1.1rem;font-weight:800;flex:none;margin-bottom:20px}
+.why-row h3{font-size:1.22rem;font-weight:700;margin-bottom:8px}
+.why-row p{color:var(--muted);font-size:.98rem;line-height:1.6}
+
+/* CONSULTATION */
+.consult{background:var(--bg)}
+.consult-head{max-width:680px;margin:0 auto 48px;text-align:center}
+.consult-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-xl);overflow:hidden;display:grid;grid-template-columns:1.08fr 1fr;box-shadow:var(--sh)}
+.consult-left{padding:clamp(34px,4.5vw,52px)}
+.consult-left .lbl{font-size:.82rem;font-weight:600;color:var(--plum);background:var(--blush);padding:6px 14px;border-radius:100px;display:inline-block}
+.consult-left h3{font-size:clamp(1.7rem,3vw,2.2rem);font-weight:800;margin:16px 0 4px;letter-spacing:-.02em}
+.consult-price{display:flex;align-items:baseline;gap:13px;margin:22px 0 28px;flex-wrap:wrap}
+.consult-price .now{font-size:2.8rem;font-weight:800;color:var(--ink);line-height:1;letter-spacing:-.03em}
+.consult-price .was{font-size:1.3rem;color:var(--muted-2);text-decoration:line-through;font-weight:500}
+.consult-price .tag{font-size:.8rem;font-weight:700;padding:7px 14px;border-radius:100px;background:var(--plum);color:#fff}
+.consult-steps{list-style:none;display:grid;gap:0;border-top:1px solid var(--line)}
+.consult-steps li{display:grid;grid-template-columns:auto 1fr;gap:15px;padding:18px 0;border-bottom:1px solid var(--line);align-items:start}
+.consult-steps .ck{width:28px;height:28px;border-radius:50%;background:var(--blush);display:grid;place-items:center;flex:none;margin-top:1px}
+.consult-steps .ck::before{content:'';width:9px;height:5px;border-left:2px solid var(--plum);border-bottom:2px solid var(--plum);transform:rotate(-45deg) translateY(-1px)}
+.consult-steps li b{display:block;font-weight:700;font-size:1.06rem;margin-bottom:2px}
+.consult-steps li p{font-size:.92rem;color:var(--muted);line-height:1.5}
+.consult-right{background:var(--plum);color:#fff;padding:clamp(34px,4.5vw,52px);display:flex;flex-direction:column;justify-content:center}
+.consult-right .q{font-size:clamp(1.5rem,2.5vw,1.95rem);font-weight:800;line-height:1.22;letter-spacing:-.02em}
+.consult-right .qc{color:rgba(255,255,255,.82);margin-top:18px;font-size:.98rem;line-height:1.6}
+.consult-right .btn{margin-top:30px;align-self:flex-start}
+
+/* PROCES */
+.proces{background:var(--card)}
+.proces-head{max-width:640px;margin-bottom:44px}
+.flow-list{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.flow-item{display:grid;gap:14px;background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-xl);padding:28px;align-content:start}
+.flow-item .n{width:44px;height:44px;border-radius:14px;background:var(--blush);color:var(--plum);display:grid;place-items:center;font-size:1.15rem;font-weight:800}
+.flow-item b{display:block;font-weight:700;font-size:1.12rem;margin-bottom:4px}
+.flow-item p{font-size:.94rem;color:var(--muted);line-height:1.55}
+
+/* PRICING */
+.pricing{background:var(--blush-2)}
+.pricing-head{max-width:640px;margin:0 auto 44px;text-align:center}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+.price-card{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-xl);padding:clamp(28px,3vw,38px);display:flex;flex-direction:column;box-shadow:var(--sh-sm)}
+.price-card.feat{background:var(--plum);color:#fff;border-color:transparent;box-shadow:var(--sh-lg);transform:scale(1.02)}
+.price-tag{display:inline-flex;align-items:center;gap:7px;font-size:.74rem;font-weight:700;letter-spacing:.02em;border:1px solid var(--line);padding:7px 14px;border-radius:100px;margin-bottom:22px;color:var(--plum);align-self:flex-start;background:var(--blush)}
+.price-card.feat .price-tag{border-color:rgba(255,255,255,.25);color:#fff;background:rgba(255,255,255,.14)}
+.price-figure{font-size:clamp(2rem,3.4vw,2.7rem);font-weight:800;line-height:1;display:flex;align-items:baseline;gap:7px;letter-spacing:-.03em}
+.price-figure .zl{font-size:.42em;color:var(--muted);font-weight:600}
+.price-card.feat .price-figure .zl{color:rgba(255,255,255,.7)}
+.price-meta-note{font-size:.86rem;color:var(--muted);margin-top:11px;font-weight:500}
+.price-card.feat .price-meta-note{color:rgba(255,255,255,.78)}
+.price-list{list-style:none;display:grid;gap:12px;margin:24px 0;padding-top:24px;border-top:1px solid var(--line);flex:1}
+.price-card.feat .price-list{border-top-color:rgba(255,255,255,.18)}
+.price-list li{display:grid;grid-template-columns:20px 1fr;gap:11px;align-items:start;font-size:.94rem;line-height:1.45}
+.price-list .ck{color:var(--plum);font-weight:800}
+.price-card.feat .price-list .ck{color:#fff}
+.price-fine{text-align:center;color:var(--muted);font-size:.9rem;margin-top:36px;max-width:48em;margin-left:auto;margin-right:auto;line-height:1.6}
+
+/* SAFETY */
+.safety{background:var(--bg)}
+.safety-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:54px;align-items:center}
+.safety-points{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.safety-point{display:grid;gap:12px;padding:24px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh-sm);align-content:start}
+.safety-point .ic{width:44px;height:44px;border-radius:13px;background:var(--blush);display:grid;place-items:center;font-size:1rem;font-weight:800;color:var(--plum)}
+.safety-point b{display:block;font-weight:700;font-size:1.08rem;margin-bottom:3px}
+.safety-point p{font-size:.92rem;color:var(--muted);line-height:1.5}
+
+/* OPINIE */
+.opinie{background:var(--card)}
+.opinie-head{text-align:center;max-width:560px;margin:0 auto 44px}
+.opinie-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.op-card{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-xl);padding:32px;display:flex;flex-direction:column}
+.op-stars{color:var(--rose);letter-spacing:3px;font-size:1rem;margin-bottom:16px}
+.op-text{font-size:1.04rem;line-height:1.55;color:var(--ink-2);flex:1;font-weight:500}
+.op-who{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);display:flex;align-items:center;gap:12px;font-size:.86rem;color:var(--muted)}
+.op-who .av{width:40px;height:40px;border-radius:50%;background:var(--blush);color:var(--plum);display:grid;place-items:center;font-weight:800;font-size:.9rem;flex:none}
+.op-who b{color:var(--ink);font-weight:700;display:block}
+
+/* BOOKING */
+.booking{background:var(--blush-2)}
+.booking-head{text-align:center;max-width:680px;margin:0 auto 44px}
+.booking-head .sub{margin:13px auto 0}
+.booking-card{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh-lg);max-width:1000px;margin:0 auto;overflow:hidden;display:grid;grid-template-columns:1fr 1fr}
+.cal-side{padding:clamp(28px,3.2vw,40px);border-right:1px solid var(--line)}
+.form-side{padding:clamp(28px,3.2vw,40px);background:var(--bg-2)}
+.step-lbl{font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.step-lbl .nbox{width:24px;height:24px;border-radius:8px;background:var(--plum);color:#fff;display:grid;place-items:center;font-size:.78rem;font-weight:800}
+.cal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-month{font-size:1.18rem;font-weight:700;text-transform:capitalize}
+.cal-nav{display:flex;gap:8px}
+.cal-nav button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;cursor:pointer;display:grid;place-items:center;color:var(--ink);transition:.2s;font-size:1.1rem}
+.cal-nav button:hover:not(:disabled){background:var(--plum);color:#fff;border-color:var(--plum)}
+.cal-nav button:disabled{opacity:.3;cursor:not-allowed}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal-dow{text-align:center;font-size:.7rem;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--muted-2);padding:6px 0}
+.cal-day{aspect-ratio:1;border:none;background:transparent;border-radius:11px;cursor:pointer;font-size:.94rem;font-weight:500;color:var(--ink);display:grid;place-items:center;transition:.16s;position:relative}
+.cal-day:hover:not(:disabled):not(.sel){background:var(--blush)}
+.cal-day:disabled{color:#CFC9CE;cursor:default}
+.cal-day.empty{visibility:hidden}
+.cal-day.today{box-shadow:inset 0 0 0 1.5px var(--rose)}
+.cal-day.avail::after{content:'';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--rose)}
+.cal-day.sel{background:var(--plum);color:#fff;font-weight:700}
+.cal-day.sel::after{background:#fff}
+.cal-legend{margin-top:15px;font-size:.8rem;color:var(--muted);display:flex;align-items:center;gap:8px;font-weight:500}
+.cal-legend .d{width:6px;height:6px;border-radius:50%;background:var(--rose)}
+.slots-wrap{margin-top:22px;padding-top:22px;border-top:1px solid var(--line)}
+.slots-empty{font-size:.9rem;color:var(--muted-2);padding:8px 0}
+.slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
+.slot{padding:13px 6px;border:1.5px solid var(--line);border-radius:var(--r);background:#fff;font-size:.92rem;font-weight:600;cursor:pointer;text-align:center;transition:.16s;font-variant-numeric:tabular-nums;color:var(--ink)}
+.slot:hover{border-color:var(--plum);color:var(--plum)}
+.slot.sel{background:var(--plum);color:#fff;border-color:var(--plum)}
+.bk-summary{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;font-size:.94rem;box-shadow:var(--sh-sm)}
+.bk-summary .ico{width:42px;height:42px;border-radius:13px;background:var(--blush);color:var(--plum);display:grid;place-items:center;font-size:1.2rem;flex:none}
+.bk-summary b{font-weight:700}
+.bk-summary .muted{color:var(--muted-2);display:block;font-size:.82rem;margin-top:1px}
+.bk-summary.empty{color:var(--muted-2)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:.82rem;font-weight:600;color:var(--ink-2);margin-bottom:7px}
+.field input,.field textarea{width:100%;padding:14px 16px;background:#fff;border:1.5px solid var(--line);border-radius:var(--r);font-family:inherit;font-size:.98rem;color:var(--ink);transition:.18s;-webkit-appearance:none;min-height:50px}
+.field textarea{min-height:80px;resize:vertical;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted-2)}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--plum)}
+.check{display:flex;gap:11px;font-size:.86rem;color:var(--muted);margin-bottom:16px;align-items:flex-start;line-height:1.5}
+.check input{flex:none;margin-top:2px;accent-color:var(--plum);width:19px;height:19px}
+.check a{color:var(--plum);font-weight:600;text-decoration:underline}
+.bk-btn{width:100%;margin-top:6px}
+.bk-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.bk-fine{font-size:.76rem;color:var(--muted-2);margin-top:13px;line-height:1.5}
+.bk-success{display:none;text-align:center;padding:24px 0}
+.bk-success.show{display:block;animation:fade .5s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.bk-success .seal{width:70px;height:70px;border-radius:50%;background:var(--plum);margin:0 auto 20px;display:grid;place-items:center;box-shadow:0 12px 30px -8px rgba(106,74,99,.6)}
+.bk-success .seal::before{content:'';width:22px;height:12px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg) translateY(-2px)}
+.bk-success h3{font-size:1.55rem;font-weight:800;margin-bottom:10px}
+.bk-success p{color:var(--muted);font-size:.96rem;max-width:30em;margin:0 auto;line-height:1.6}
+.bk-success .recap{margin-top:20px;padding:14px 20px;background:var(--blush);border-radius:var(--r-lg);font-size:.95rem;font-weight:700;color:var(--plum);display:inline-block}
+
+/* FAQ */
+.faq{background:var(--bg)}
+.faq-head{text-align:center;max-width:600px;margin:0 auto 40px}
+.faq-list{max-width:780px;margin:0 auto;display:grid;gap:12px}
+.q-item{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;transition:box-shadow .25s}
+.q-item.open{box-shadow:var(--sh-sm)}
+.q-btn{width:100%;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 24px;font-family:inherit;font-size:clamp(1.02rem,1.6vw,1.14rem);font-weight:700;color:var(--ink);text-align:left;min-height:60px;transition:color .2s}
+.q-btn:hover{color:var(--plum)}
+.q-btn .pm{flex:none;width:30px;height:30px;border-radius:50%;background:var(--blush);display:grid;place-items:center;font-size:1.1rem;color:var(--plum);transition:transform .3s cubic-bezier(.22,.61,.36,1),background .3s,color .3s}
+.q-item.open .q-btn .pm{transform:rotate(45deg);background:var(--plum);color:#fff}
+.q-ans{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,.61,.36,1)}
+.q-ans p{padding:0 24px 24px;font-size:.98rem;color:var(--muted);line-height:1.7;max-width:60em}
+
+/* FINAL */
+.final{background:var(--plum);color:#fff;text-align:center;position:relative;overflow:hidden}
+.final-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:560px;background:radial-gradient(ellipse,rgba(255,255,255,.1),transparent 60%);pointer-events:none}
+.final .wrap{position:relative;z-index:2;max-width:720px}
+.final h2{margin-bottom:18px}
+.final .sub{margin:0 auto 30px}
+
+/* FOOTER */
+footer{background:var(--plum-dd);color:rgba(255,255,255,.72);padding:56px 0 32px}
+.ft-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:28px;padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.12)}
+footer .logo{color:#fff;font-size:1.4rem;margin-bottom:10px}
+footer .logo em{color:#E8C9D8}
+.ft-contact{font-size:.92rem;color:rgba(255,255,255,.75);line-height:1.8}
+.ft-contact a:hover{color:#fff}
+.ft-socials{display:flex;gap:10px}
+.ft-socials a{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;font-size:.74rem;font-weight:600;color:rgba(255,255,255,.8);transition:.25s;text-transform:uppercase;letter-spacing:.04em}
+.ft-socials a:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.08)}
+.ft-bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:24px;font-size:.82rem;color:rgba(255,255,255,.6)}
+.ft-bot a:hover{color:#fff}
+
+/* PHOTO-READY: media hero + galeria + portret. Zdjęcia dostają jednolity filtr pod paletę. */
+.ph-img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.03) contrast(1.02) brightness(1.02)}
+.hero-media{margin:50px auto 0;max-width:860px;aspect-ratio:16/9;border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--sh-lg);position:relative;background:#EAD9E0}
+.hero-media:empty{display:none}
+.hero-video{position:relative;width:100%;height:100%;cursor:pointer}
+.hero-video .vp{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(1.03) contrast(1.02)}
+.hero-video .vp::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(40,30,40,.05),rgba(40,30,40,.42))}
+.hero-video .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:82px;height:82px;border-radius:50%;background:#fff;display:grid;place-items:center;border:none;box-shadow:0 12px 36px rgba(0,0,0,.3);transition:transform .3s cubic-bezier(.22,.61,.36,1)}
+.hero-video .play::before{content:'';width:0;height:0;border-left:21px solid var(--plum);border-top:13px solid transparent;border-bottom:13px solid transparent;margin-left:6px}
+.hero-video:hover .play{transform:translate(-50%,-50%) scale(1.07)}
+.hero-video .hint{position:absolute;inset:auto 0 24px;text-align:center;color:rgba(255,255,255,.92);font-size:.86rem;font-weight:500;z-index:2}
+.hero-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.gallery{background:var(--card)}
+.gallery-head{text-align:center;max-width:560px;margin:0 auto 40px}
+.gallery-head .eyebrow{margin-bottom:16px}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.gallery-grid .g{border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/5;background:var(--blush);border:1px solid var(--line)}
+@media(max-width:700px){.gallery-grid{grid-template-columns:1fr 1fr}}
+.consult-right.has-photo{position:relative}
+.consult-right.has-photo .ph-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
+.consult-right.has-photo .ph-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(106,74,99,.74),rgba(84,58,79,.93))}
+.consult-right.has-photo>*{position:relative;z-index:1}
+
+/* REVEAL */
+.r{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1)}
+.r.in{opacity:1;transform:none}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
+@media(prefers-reduced-motion:reduce){.r{opacity:1;transform:none;transition:none}*{scroll-behavior:auto!important}}
+
+/* RESPONSIVE */
+@media(max-width:980px){
+  .pain-grid,.why-head,.safety-grid,.consult-card,.laser-grid{grid-template-columns:1fr;gap:38px}
+  .why-list,.safety-points{grid-template-columns:1fr}
+  .flow-list,.pricing-grid,.opinie-grid{grid-template-columns:1fr}
+  .price-card.feat{transform:none}
+  .booking-card{grid-template-columns:1fr}
+  .cal-side{border-right:none;border-bottom:1px solid var(--line)}
+  .hero-steps{grid-template-columns:1fr}
+  .trustbar{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .wrap{padding:0 22px}
+  .hero{padding-top:104px}
+  .why-row{grid-template-columns:1fr}
+  .trustbar{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#rezerwacja">Przejdź do rezerwacji</a>
+
+<!-- HEADER -->
+<header>
+  <nav class="nav">
+    <a href="#" class="logo">Remedy <em>·&nbsp;laser</em></a>
+    <div class="nav-links">
+      <a href="#konsultacja">Konsultacja</a>
+      <a href="#proces">Proces</a>
+      <a href="#pakiety">Pakiety</a>
+      <a href="#faq">Pytania</a>
+      <a href="#rezerwacja" class="btn nav-cta">Umów termin</a>
+    </div>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-content">
+      <span class="eyebrow r">Depilacja laserowa · Warszawa, Praga-Południe</span>
+      <h1 class="display r d1">Gładka skóra, <em>zrobiona raz a dobrze</em>.</h1>
+      <p class="sub r d2">Kameralny gabinet, stała specjalistka i laser medyczny. Zaczynamy od diagnozy Twojej skóry i włosa — nie od sprzedaży pakietu w ciemno.</p>
+      <div class="hero-cta-row r d2">
+        <a href="#rezerwacja" class="btn btn-dark">Umów konsultację <span class="arr">→</span></a>
+        <a href="#proces" class="btn btn-ghost-d">Zobacz, jak to działa</a>
+      </div>
+      <div class="hero-steps r d3">
+        <div class="hstep"><span class="n">1</span><div><b>Rezerwujesz online</b><span>dogodny termin, bez dzwonienia i czekania na oddzwonienie</span></div></div>
+        <div class="hstep"><span class="n">2</span><div><b>Diagnoza i próba</b><span>analiza skóry i włosa, próba laserowa, plan pod Ciebie</span></div></div>
+        <div class="hstep"><span class="n">3</span><div><b>Plan i wycena</b><span>konkretnie: ile zabiegów i ile to kosztuje — w Twoim tempie</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PASEK ZAUFANIA / USP -->
+<section class="trustbar-sec">
+  <div class="wrap">
+    <div class="trustbar r">
+      <div class="tb"><b>150&nbsp;zł → 0&nbsp;zł</b><span>konsultacja diagnostyczna gratis</span></div>
+      <div class="tb"><b>Laser medyczny</b><span>klasa medyczna, nie „kosmetyczna"</span></div>
+      <div class="tb"><b>Stała specjalistka</b><span>ta sama osoba, kameralnie</span></div>
+      <div class="tb"><b>Stała cena pakietu</b><span>bez wyprzedaży i „−50%"</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pad pain">
+  <div class="wrap">
+    <div class="pain-grid">
+      <div class="big-quote r">„Czy ja się dziś ogoliłam?"<span>znasz to pytanie na pamięć</span></div>
+      <div>
+        <p class="sub r d1" style="margin-bottom:8px">Golenie od lat. Wosk, pasta cukrowa — nic nie trzyma dłużej niż kilka dni. A pod spodem ciągle to samo:</p>
+        <ul class="pain-list r d2">
+          <li><span class="dot"></span><span>Codzienne golenie i to odruchowe sprawdzanie <b>przed basenem, plażą, siłownią</b>.</span></li>
+          <li><span class="dot"></span><span>Wrastające włoski i czerwone kropki, które <b>wracają nazajutrz</b>.</span></li>
+          <li><span class="dot"></span><span>Podrażniona skóra, która nigdy nie jest naprawdę gładka.</span></li>
+          <li><span class="dot"></span><span>A może już raz próbowałaś lasera — i <b>nie zadziałało</b> albo wciskano kolejne wizyty.</span></li>
+        </ul>
+        <p class="sub r d2" style="margin-top:20px">To nie dramat. To drobna udręka, która kumuluje się latami. Dojrzała do tego, żeby ją wreszcie zamknąć — w miejscu, które potraktuje Cię poważnie.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY / SIGNAL -->
+<section class="pad why dark">
+  <div class="wrap">
+    <div class="why-head">
+      <div class="r"><span class="eyebrow">Dlaczego Remedy</span><h2 class="title">Kameralnie. Uczciwie.<br><em>Bez wyprzedaży.</em></h2></div>
+      <p class="sub r d1">Wiesz, jak brzmi „−50% na pakiet" i jak wygląda salon-taśma, gdzie za każdym razem ktoś inny. U nas jest inaczej — i to czujesz od pierwszej wizyty.</p>
+    </div>
+    <div class="why-list">
+      <div class="why-row r"><span class="why-idx">01</span><h3>Kameralnie,<br>stała specjalistka</h3><p>Prowadzi Cię ta sama osoba — od diagnozy po ostatni zabieg. Zna Twoją skórę i Twój plan. Bez taśmy i wymiany rąk co wizytę.</p></div>
+      <div class="why-row r d1"><span class="why-idx">02</span><h3>Diagnoza i próba,<br>nie sprzedaż w ciemno</h3><p>Najpierw analizujemy skórę i włos oraz robimy próbę laserową. Dopiero potem plan. Jeśli laser nie jest dla Ciebie — powiemy to wprost.</p></div>
+      <div class="why-row r d2"><span class="why-idx">03</span><h3>Stała cena pakietu,<br>bez „−50%"</h3><p>Nie gramy wyprzedażą ani sztuczną presją. Cena jest jasna i stała — wiesz dokładnie, za co płacisz, i nie musisz łapać „okazji".</p></div>
+      <div class="why-row r d2"><span class="why-idx">04</span><h3>Bez naciągania<br>na kolejne wizyty</h3><p>Nie wydłużamy procesu, żeby zarobić więcej. Pracujemy na realny efekt — i na to, żebyś wróciła z polecenia, nie z konieczności.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LASER MEDYCZNY -->
+<section class="pad laser" id="laser">
+  <div class="wrap">
+    <div class="laser-grid">
+      <div class="r">
+        <span class="eyebrow">Dlaczego to ważne</span>
+        <h2 class="title">Pracujemy na <em>laserze medycznym</em>.</h2>
+        <p class="sub" style="margin-top:16px">To nie hasło z reklamy, tylko kwestia bezpieczeństwa i skuteczności. Sprzęt klasy medycznej pozwala dobrać parametry pod Twój fototyp skóry i typ włosa — precyzyjnie i z kontrolą, której nie daje sprzęt spoza tej klasy.</p>
+        <ul class="laser-list">
+          <li><span class="lk"></span><div><b>Dobór pod Twoją skórę</b><p>Parametry ustawiane indywidualnie po diagnozie — nie jeden schemat dla wszystkich.</p></div></li>
+          <li><span class="lk"></span><div><b>Bezpieczeństwo w standardzie</b><p>Praca w kontrolowanych, bezpiecznych zakresach — komfort i skóra na pierwszym miejscu.</p></div></li>
+          <li><span class="lk"></span><div><b>Skuteczność, nie obietnice</b><p>Realne oczekiwania oparte na diagnozie, a nie na chwytliwym haśle.</p></div></li>
+        </ul>
+      </div>
+      <div class="compare r d1">
+        <div class="cmp-head">Co to zmienia w praktyce</div>
+        <div class="cmp-row"><span class="cmp-l">Dobór parametrów</span><span class="cmp-good">pod fototyp i włos</span></div>
+        <div class="cmp-row"><span class="cmp-l">Diagnoza przed startem</span><span class="cmp-good">tak, z próbą laserową</span></div>
+        <div class="cmp-row"><span class="cmp-l">Kto prowadzi</span><span class="cmp-good">stała specjalistka</span></div>
+        <div class="cmp-row"><span class="cmp-l">Cena pakietu</span><span class="cmp-good">stała, jasna</span></div>
+        <p class="cmp-note">Zamiast pytania „gdzie najtaniej?" — pytanie „gdzie zrobią mi to dobrze?".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONSULTATION -->
+<section class="pad consult" id="konsultacja">
+  <div class="wrap">
+    <div class="consult-head r">
+      <span class="eyebrow">Pierwszy krok</span>
+      <h2 class="title">Konsultacja diagnostyczna<br><em>z próbą laserową</em>.</h2>
+      <p class="sub" style="margin:16px auto 0">Spokojna rozmowa i realne sprawdzenie, zanim cokolwiek zdecydujesz. Bez zobowiązań, bez presji.</p>
+    </div>
+    <div class="consult-card r d1">
+      <div class="consult-left">
+        <span class="lbl">Co dokładnie obejmuje</span>
+        <h3>Diagnoza, nie sprzedaż</h3>
+        <div class="consult-price">
+          <span class="now">0 zł</span>
+          <span class="was">150 zł</span>
+          <span class="tag">z tej strony — gratis</span>
+        </div>
+        <ul class="consult-steps">
+          <li><span class="ck"></span><div><b>Analiza skóry i włosa</b><p>Określamy fototyp skóry i typ owłosienia — od tego zależy wszystko.</p></div></li>
+          <li><span class="ck"></span><div><b>Wywiad i kontekst</b><p>Rozmawiamy o Twojej sytuacji — także o czynnikach, które wpływają na efekt (np. gospodarka hormonalna).</p></div></li>
+          <li><span class="ck"></span><div><b>Próba laserowa</b><p>Realny test na małym obszarze, żebyś wiedziała, czego się spodziewać.</p></div></li>
+          <li><span class="ck"></span><div><b>Indywidualny plan</b><p>Proponowana liczba i odstępy zabiegów — ułożone pod Ciebie, na piśmie.</p></div></li>
+        </ul>
+      </div>
+      <div class="consult-right on-plum" id="consultRight">
+        <p class="q">„Pokażcie mi, że u Was jest inaczej."</p>
+        <p class="qc">Właśnie po to jest ta konsultacja. Wychodzisz z niej wiedząc, czy laser zadziała u Ciebie, ile to potrwa i ile realnie kosztuje — bez wciskania niczego na siłę.</p>
+        <a href="#rezerwacja" class="btn btn-light">Wybierz termin <span class="arr">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCES -->
+<section class="pad proces dark" id="proces">
+  <div class="wrap">
+    <div class="proces-head r">
+      <span class="eyebrow">Jak to wygląda u nas</span>
+      <h2 class="title">Od pierwszego kliknięcia<br><em>do gładkiej skóry</em>.</h2>
+      <p class="sub" style="margin-top:14px">Jasna droga, żebyś na każdym etapie wiedziała, co dalej.</p>
+    </div>
+    <div class="flow-list">
+      <div class="flow-item r"><span class="n">1</span><div><b>Rezerwujesz termin online</b><p>Wybierasz dogodny dzień i godzinę w kalendarzu poniżej. Bez dzwonienia, bez czekania na oddzwonienie.</p></div></div>
+      <div class="flow-item r d1"><span class="n">2</span><div><b>Dostajesz potwierdzenie</b><p>Na maila przychodzi potwierdzenie wizyty z adresem i wskazówkami, jak się przygotować.</p></div></div>
+      <div class="flow-item r d1"><span class="n">3</span><div><b>Przychodzisz na konsultację</b><p>Diagnoza skóry i włosa, wywiad, próba laserowa. Spokojnie, bez pośpiechu, z czasem na pytania.</p></div></div>
+      <div class="flow-item r d2"><span class="n">4</span><div><b>Dostajesz plan i wycenę</b><p>Konkretnie: ile zabiegów, w jakich odstępach, ile to kosztuje. Decyzję podejmujesz w swoim tempie.</p></div></div>
+      <div class="flow-item r d2"><span class="n">5</span><div><b>Zaczynamy zabiegi</b><p>Pracujemy zgodnie z Twoim planem. Komfort, bezpieczeństwo i realny efekt — krok po kroku.</p></div></div>
+      <div class="flow-item r d3"><span class="n">6</span><div><b>Cieszysz się gładką skórą</b><p>Koniec z codziennym goleniem i „czy się ogoliłam?". To załatwiasz raz, porządnie.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pad pricing" id="pakiety">
+  <div class="wrap">
+    <div class="pricing-head r">
+      <span class="eyebrow">Pakiety i ceny</span>
+      <h2 class="title">Cena, która <em>broni się sama</em>.</h2>
+      <p class="sub" style="margin:14px auto 0">Ceny podajemy wprost — żebyś znała je, zanim gdziekolwiek zadzwonisz. Poniżej przykładowe pakiety; dokładny plan i wycenę ustalamy na konsultacji, pod Twoją partię ciała i typ włosa.</p>
+    </div>
+    <div class="price-note-wrap r"><span class="price-note">Ceny przykładowe — potwierdzamy na konsultacji</span></div>
+    <div class="pricing-grid">
+      <!-- PODMIEŃ ceny/zakresy pod realny cennik salonu -->
+      <div class="price-card r">
+        <span class="price-tag">Pakiet Komfort</span>
+        <div class="price-meta-note">np. bikini + pachy · pakiet 6 zabiegów</div>
+        <div class="price-anchor">pojedynczo ok. <s>2&nbsp;040&nbsp;zł</s></div>
+        <div class="price-figure" data-price>1&nbsp;490 <span class="zl">zł</span></div>
+        <div class="price-save">oszczędzasz ok. 550&nbsp;zł</div>
+        <ul class="price-list">
+          <li><span class="ck">✓</span><span>Pakiet 6 zabiegów na łączoną, mniejszą strefę</span></li>
+          <li><span class="ck">✓</span><span>Indywidualne odstępy między wizytami</span></li>
+          <li><span class="ck">✓</span><span>Stała specjalistka i kontrola efektów</span></li>
+        </ul>
+        <a href="#rezerwacja" class="btn btn-ghost-d">Umów konsultację</a>
+      </div>
+      <div class="price-card feat on-plum r d1">
+        <span class="price-tag"><span class="star">★</span> Pakiet Lato · najczęściej wybierany</span>
+        <div class="price-meta-note">np. całe nogi + bikini + pachy · 6 zabiegów</div>
+        <div class="price-anchor">pojedynczo ok. <s>4&nbsp;260&nbsp;zł</s></div>
+        <div class="price-figure" data-price>2&nbsp;990 <span class="zl">zł</span></div>
+        <div class="price-save">oszczędzasz ok. 1&nbsp;270&nbsp;zł</div>
+        <ul class="price-list">
+          <li><span class="ck">✓</span><span>Pakiet 6 zabiegów na łączone, większe strefy</span></li>
+          <li><span class="ck">✓</span><span>Plan ułożony pod Twój typ włosa i skóry</span></li>
+          <li><span class="ck">✓</span><span>Priorytetowe terminy zabiegów</span></li>
+          <li><span class="ck">✓</span><span>Stała specjalistka i kontrola efektów</span></li>
+        </ul>
+        <a href="#rezerwacja" class="btn btn-light">Umów konsultację</a>
+      </div>
+      <div class="price-card r d2">
+        <span class="price-tag">Pakiet Pełny</span>
+        <div class="price-meta-note">kompleksowo · kilka stref · 6 zabiegów</div>
+        <div class="price-anchor">pojedynczo ok. <s>5&nbsp;400&nbsp;zł</s></div>
+        <div class="price-figure" data-price>3&nbsp;990 <span class="zl">zł</span></div>
+        <div class="price-save">oszczędzasz ok. 1&nbsp;410&nbsp;zł</div>
+        <ul class="price-list">
+          <li><span class="ck">✓</span><span>Najszerszy pakiet — kilka stref naraz</span></li>
+          <li><span class="ck">✓</span><span>Pełny plan zabiegów na piśmie</span></li>
+          <li><span class="ck">✓</span><span>Najlepszy stosunek ceny do zakresu</span></li>
+          <li><span class="ck">✓</span><span>Stała specjalistka i kontrola efektów</span></li>
+        </ul>
+        <a href="#rezerwacja" class="btn btn-ghost-d">Umów konsultację</a>
+      </div>
+    </div>
+    <p class="price-fine r">Dlaczego pakiet, a nie pojedyncze wizyty? Bo laser działa w serii — dopiero cykl zabiegów daje trwały efekt. W pakiecie płacisz wyraźnie mniej niż za te same zabiegi osobno, masz stałą cenę bez wyprzedaży i całość zaplanowaną z góry. Ostateczną wycenę ustalamy na konsultacji — bez zobowiązań na pierwszej wizycie.</p>
+  </div>
+</section>
+
+<!-- SAFETY -->
+<section class="pad safety dark">
+  <div class="wrap">
+    <div class="safety-grid">
+      <div class="r">
+        <span class="eyebrow">Bezpieczeństwo</span>
+        <h2 class="title">Robimy to <em>z głową</em>.</h2>
+        <p class="sub" style="margin-top:16px">Depilacja laserowa to zabieg, który trzeba prowadzić odpowiedzialnie. U nas to standard, nie dodatek.</p>
+      </div>
+      <div class="safety-points r d1">
+        <div class="safety-point"><span class="ic">01</span><div><b>Wykwalifikowany personel</b><p>Zabiegi prowadzą przeszkolone osoby, które rozumieją skórę i bezpieczne parametry pracy.</p></div></div>
+        <div class="safety-point"><span class="ic">02</span><div><b>Dobór pod Twoją skórę</b><p>Parametry ustalamy indywidualnie — po diagnozie fototypu skóry i typu włosa.</p></div></div>
+        <div class="safety-point"><span class="ic">03</span><div><b>Higiena i komfort</b><p>Czysty, estetyczny gabinet i spokojna atmosfera. Bez pośpiechu i bez stresu.</p></div></div>
+        <div class="safety-point"><span class="ic">04</span><div><b>Realne oczekiwania</b><p>Mówimy, czego można się spodziewać, a czego nie. Bez obietnic, których nie da się dotrzymać.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OPINIE -->
+<section class="pad opinie">
+  <div class="wrap">
+    <div class="opinie-head r">
+      <span class="eyebrow">Co mówią klientki</span>
+      <h2 class="title">Zaufały — i&nbsp;zostały.</h2>
+    </div>
+    <div class="opinie-grid">
+      <!-- PODMIEŃ na prawdziwe opinie (imię + pierwsza litera nazwiska) -->
+      <div class="op-card r"><div class="op-stars">★★★★★</div><p class="op-text">Bałam się po poprzednim salonie, gdzie tylko wciskali kolejne pakiety. Tu najpierw spokojnie wszystko wytłumaczyli i zrobili próbę. Czułam, że jestem w dobrych rękach.</p><div class="op-who"><b>Aleksandra K.</b> · klientka Remedy</div></div>
+      <div class="op-card r d1"><div class="op-stars">★★★★★</div><p class="op-text">Kameralnie, zawsze ta sama specjalistka, zero pośpiechu. Wreszcie miejsce, które traktuje temat poważnie.</p><div class="op-who"><b>Aleksandra K.</b> · klientka Remedy</div></div>
+      <div class="op-card r d2"><div class="op-stars">★★★★★</div><p class="op-text">Cena od początku jasna, bez żadnych „promocji na już". Wszystko rozpisane z góry — dokładnie wiedziałam, na co się piszę.</p><div class="op-who"><b>Marta W.</b> · klientka Remedy</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<!-- GALERIA (opcjonalna) — pokazuje się TYLKO jeśli w CONFIG.media.galeria są zdjęcia -->
+<section class="pad gallery" id="galeria" hidden>
+  <div class="wrap">
+    <div class="gallery-head r">
+      <span class="eyebrow">Zajrzyj do środka</span>
+      <h2 class="title">Miejsce, w którym <em>poczujesz się dobrze</em>.</h2>
+    </div>
+    <div class="gallery-grid r d1" id="galleryGrid"></div>
+  </div>
+</section>
+
+<section class="pad booking" id="rezerwacja">
+  <div class="wrap">
+    <div class="booking-head r">
+      <span class="eyebrow">Rezerwacja online</span>
+      <h2 class="title">Wybierz termin <em>konsultacji</em>.</h2>
+      <p class="sub">Wskaż dogodny dzień i godzinę. Po rezerwacji wyślemy Ci potwierdzenie mailem — bez czekania na telefon.</p>
+    </div>
+
+    <div class="booking-card r d1">
+      <!-- KALENDARZ -->
+      <div class="cal-side">
+        <div class="step-lbl"><span class="nbox">1</span> Wybierz dzień</div>
+        <div class="cal-top">
+          <div class="cal-month" id="calMonth">—</div>
+          <div class="cal-nav">
+            <button id="calPrev" aria-label="Poprzedni miesiąc">‹</button>
+            <button id="calNext" aria-label="Następny miesiąc">›</button>
+          </div>
+        </div>
+        <div class="cal-grid" id="calGrid" role="grid" aria-label="Kalendarz terminów"></div>
+        <div class="cal-legend"><span class="d"></span> dostępny termin</div>
+
+        <div class="slots-wrap">
+          <div class="step-lbl"><span class="nbox">2</span> Wybierz godzinę</div>
+          <div id="slotsArea"><p class="slots-empty">Najpierw wybierz dzień z kalendarza.</p></div>
+        </div>
+      </div>
+
+      <!-- FORMULARZ -->
+      <div class="form-side">
+        <div class="step-lbl"><span class="nbox">3</span> Zostaw dane kontaktowe</div>
+
+        <div class="bk-summary empty" id="bkSummary">
+          <span class="ico">📅</span>
+          <div><b id="bkSummaryMain">Wybierz dzień i godzinę</b><span class="muted" id="bkSummarySub">Twój termin pojawi się tutaj</span></div>
+        </div>
+
+        <form id="bookingForm" novalidate>
+          <div class="field"><label for="bkName">Imię i nazwisko</label><input type="text" id="bkName" name="imie" placeholder="Anna Kowalska" autocomplete="name"></div>
+          <div class="field"><label for="bkPhone">Telefon</label><input type="tel" id="bkPhone" name="telefon" placeholder="600 000 000" autocomplete="tel"></div>
+          <div class="field"><label for="bkEmail">E-mail (na niego wyślemy potwierdzenie)</label><input type="email" id="bkEmail" name="email" placeholder="anna@email.pl" autocomplete="email"></div>
+          <div class="field"><label for="bkNote">Strefa, którą chcesz omówić (opcjonalnie)</label><textarea id="bkNote" name="strefa" placeholder="np. bikini + pachy, nogi…"></textarea></div>
+
+          <!-- pola techniczne wypełniane automatycznie -->
+          <input type="hidden" id="bkDate" name="termin_data">
+          <input type="hidden" id="bkTime" name="termin_godzina">
+          <input type="hidden" name="_subject" value="Nowa rezerwacja konsultacji — Remedy">
+
+          <label class="check"><input type="checkbox" id="bkConsent"><span>Wyrażam zgodę na kontakt w sprawie rezerwacji i akceptuję <a href="#" target="_blank">politykę prywatności</a>.</span></label>
+
+          <button type="submit" class="btn btn-dark bk-btn" id="bkSubmit" disabled>Rezerwuję termin <span class="arr">→</span></button>
+          <p class="bk-fine">To niezobowiązująca rezerwacja konsultacji diagnostycznej. Termin możesz zmienić lub odwołać, kontaktując się z nami.</p>
+        </form>
+
+        <!-- SUKCES -->
+        <div class="bk-success" id="bkSuccess">
+          <div class="seal"></div>
+          <h3>Termin zarezerwowany</h3>
+          <p>Dziękujemy! Potwierdzenie wizyty wyślemy na podany e-mail. Do zobaczenia w gabinecie.</p>
+          <div class="recap" id="bkRecap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="pad faq" id="faq">
+  <div class="wrap">
+    <div class="faq-head r"><span class="eyebrow">Pytania</span><h2 class="title">Zanim umówisz wizytę.</h2></div>
+    <div class="faq-list">
+      <div class="q-item"><button class="q-btn">Czy konsultacja naprawdę jest bezpłatna?<span class="pm">+</span></button><div class="q-ans"><p>Tak. Konsultacja diagnostyczna z próbą laserową ma wartość 150 zł, ale dla osób umawiających się przez tę stronę jest bezpłatna. To pierwszy krok bez zobowiązań — żebyś mogła sprawdzić, czy laser jest dla Ciebie, zanim cokolwiek zdecydujesz.</p></div></div>
+      <div class="q-item"><button class="q-btn">Czy zabieg boli?<span class="pm">+</span></button><div class="q-ans"><p>Odczucia są indywidualne i zależą od strefy oraz Twojej wrażliwości. Pracujemy w komfortowych dla skóry parametrach i wszystko tłumaczymy na bieżąco. Na konsultacji robimy próbę laserową — poczujesz sama, czego się spodziewać.</p></div></div>
+      <div class="q-item"><button class="q-btn">Skąd wiem, że u mnie zadziała?<span class="pm">+</span></button><div class="q-ans"><p>Dlatego zaczynamy od diagnozy, a nie od sprzedaży pakietu. Analizujemy Twój typ włosa, fototyp skóry i sytuację — także czynniki, które wpływają na efekt. Jeśli laser nie jest dla Ciebie najlepszą drogą, powiemy Ci to wprost.</p></div></div>
+      <div class="q-item"><button class="q-btn">Próbowałam już lasera i nie zadziałało. Co teraz?<span class="pm">+</span></button><div class="q-ans"><p>To częstsze, niż myślisz — i zwykle wynika z błędnego doboru parametrów albo zbyt szybkiego tempa zabiegów. Na konsultacji spokojnie przeanalizujemy, co poszło nie tak wcześniej, i ułożymy plan inaczej. Bez obiecywania cudów — uczciwie.</p></div></div>
+      <div class="q-item"><button class="q-btn">Ile zabiegów będę potrzebować?<span class="pm">+</span></button><div class="q-ans"><p>To zależy od strefy, typu włosa i Twojej indywidualnej sytuacji — dlatego nie podajemy jednej liczby „dla każdej". Konkretny plan z liczbą i odstępami zabiegów dostajesz na piśmie po konsultacji diagnostycznej.</p></div></div>
+      <div class="q-item"><button class="q-btn">Jak się przygotować do konsultacji?<span class="pm">+</span></button><div class="q-ans"><p>Nic specjalnego — wystarczy, że przyjdziesz. Wszystkie wskazówki dotyczące przygotowania do ewentualnych zabiegów otrzymasz na miejscu oraz w mailu potwierdzającym wizytę.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="pad final on-plum">
+  <div class="final-glow"></div>
+  <div class="wrap">
+    <h2 class="title r">Zamknij ten temat <em>raz a dobrze</em>.</h2>
+    <p class="sub r d1">Jedna konsultacja wystarczy, żebyś wiedziała, na czym stoisz. Bez presji, bez naciągania — po prostu konkretna diagnoza i plan.</p>
+    <a href="#rezerwacja" class="btn btn-light r d2">Umów bezpłatną konsultację <span class="arr">→</span></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="ft-top">
+      <div>
+        <div class="logo">Remedy</div>
+        <div class="ft-contact">
+          Grochowska 75, Praga-Południe, Warszawa<br>
+          <a href="tel:+48 500 000 000">+48 500 000 000</a> · <a href="mailto:kontakt@remedy.pl">kontakt@remedy.pl</a>
+        </div>
+      </div>
+      <div class="ft-socials">
+        <a href="#" aria-label="Instagram" target="_blank">IG</a>
+        <a href="#" aria-label="Facebook" target="_blank">FB</a>
+        <a href="tel:+48 500 000 000" aria-label="Telefon">Tel</a>
+      </div>
+    </div>
+    <div class="ft-bot">
+      <span>© <span id="yr"></span> Remedy. Depilacja laserowa premium · Warszawa.</span>
+      <span><a href="#">Polityka prywatności</a> · <a href="#">Regulamin</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   CONFIG — TU USTAWIASZ KALENDARZ I WYSYŁKĘ (jedyne, co edytujesz w JS)
+════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  // Dni pracujące: 0=niedz, 1=pon, 2=wt, 3=śr, 4=czw, 5=pt, 6=sob
+  workingDays: [1,2,3,4,5,6],
+  openHour:  10,        // godzina otwarcia
+  closeHour: 18,        // godzina zamknięcia (ostatni slot zaczyna się wcześniej)
+  slotMinutes: 60,      // długość okienka konsultacji w minutach
+  leadDays: 1,          // od kiedy można rezerwować (1 = od jutra)
+  horizonDays: 45,      // jak daleko w przód widać terminy
+  blockedDates: [       // konkretne dni wyłączone, format 'RRRR-MM-DD'
+    // '2026-07-15',
+  ],
+
+  // ── WYSYŁKA REZERWACJI ──────────────────────────────────────────
+  // Wklej swój endpoint z Formspree (https://formspree.io → New form).
+  // Dzięki temu: salon dostaje maila ze zgłoszeniem, a klientka — auto-potwierdzenie.
+  // Zostaw pusty string '' żeby przetestować bez wysyłki (pokaże ekran sukcesu).
+  formspreeEndpoint: '',   // np. 'https://formspree.io/f/xxxxxxxx'
+
+  // ── ZDJĘCIA (wszystko opcjonalne) ──────────────────────────────
+  // Wgraj plik do repo (tak jak wgrywasz moma-1.jpg) i wpisz tu jego nazwę.
+  // Puste = slot chowa się sam, zostaje czysty design. Nic nie musisz usuwać.
+  media: {
+    heroVideo: '',   // ID filmu z YouTube — ma priorytet w hero. np. 'dQw4w9WgXcQ'
+    heroImage: '',   // np. 'gabinet.jpg' — zdjęcie w hero, gdy nie ma wideo
+    portret:   '',   // np. 'specjalistka.jpg' — portret w panelu konsultacji (najlepsze zaufanie)
+    galeria:   [],   // np. ['moma-1.jpg','moma-2.jpg','moma-3.jpg'] — sekcja „Zajrzyj do środka"
+  },
+};
+
+/* ───────────────────────────────────────────────────────────────── */
+const PL_MONTHS = ['styczeń','luty','marzec','kwiecień','maj','czerwiec','lipiec','sierpień','wrzesień','październik','listopad','grudzień'];
+const PL_DOW = ['Pn','Wt','Śr','Cz','Pt','So','Nd'];
+const pad = n => String(n).padStart(2,'0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+
+const today = new Date(); today.setHours(0,0,0,0);
+const minDate = new Date(today); minDate.setDate(minDate.getDate()+CONFIG.leadDays);
+const maxDate = new Date(today); maxDate.setDate(maxDate.getDate()+CONFIG.horizonDays);
+
+let viewYear = minDate.getFullYear();
+let viewMonth = minDate.getMonth();
+let selectedDate = null;
+let selectedTime = null;
+
+const $ = id => document.getElementById(id);
+
+function isBookable(d){
+  if(d < minDate || d > maxDate) return false;
+  if(!CONFIG.workingDays.includes(d.getDay())) return false;
+  if(CONFIG.blockedDates.includes(iso(d))) return false;
+  return true;
+}
+
+function renderCalendar(){
+  $('calMonth').textContent = `${PL_MONTHS[viewMonth]} ${viewYear}`;
+  const grid = $('calGrid');
+  grid.innerHTML = '';
+  PL_DOW.forEach(d => { const el=document.createElement('div'); el.className='cal-dow'; el.textContent=d; grid.appendChild(el); });
+
+  const first = new Date(viewYear, viewMonth, 1);
+  let startOffset = (first.getDay()+6)%7; // poniedziałek jako pierwszy
+  for(let i=0;i<startOffset;i++){ const e=document.createElement('div'); e.className='cal-day empty'; grid.appendChild(e); }
+
+  const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+  for(let day=1; day<=daysInMonth; day++){
+    const d = new Date(viewYear, viewMonth, day); d.setHours(0,0,0,0);
+    const btn = document.createElement('button');
+    btn.className = 'cal-day'; btn.textContent = day; btn.type='button';
+    if(iso(d)===iso(today)) btn.classList.add('today');
+    const bookable = isBookable(d);
+    if(bookable){ btn.classList.add('avail'); btn.addEventListener('click',()=>selectDay(d,btn)); }
+    else btn.disabled = true;
+    if(selectedDate && iso(d)===iso(selectedDate)) btn.classList.add('sel');
+    grid.appendChild(btn);
+  }
+
+  // blokada nawigacji wstecz/wprzód poza zakres
+  const prevLimit = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+  const nextLimit = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+  const cur = new Date(viewYear, viewMonth, 1);
+  $('calPrev').disabled = cur <= prevLimit;
+  $('calNext').disabled = cur >= nextLimit;
+}
+
+function selectDay(d, btn){
+  selectedDate = d; selectedTime = null;
+  document.querySelectorAll('.cal-day.sel').forEach(x=>x.classList.remove('sel'));
+  btn.classList.add('sel');
+  renderSlots(d);
+  updateSummary();
+}
+
+function renderSlots(d){
+  const area = $('slotsArea');
+  const slots = [];
+  for(let h=CONFIG.openHour; h<CONFIG.closeHour; h+= CONFIG.slotMinutes/60){
+    const hr = Math.floor(h); const min = Math.round((h-hr)*60);
+    slots.push(`${pad(hr)}:${pad(min)}`);
+  }
+  if(!slots.length){ area.innerHTML='<p class="slots-empty">Brak godzin tego dnia.</p>'; return; }
+  area.innerHTML = '<div class="slots-grid">'+slots.map(s=>`<button type="button" class="slot" data-t="${s}">${s}</button>`).join('')+'</div>';
+  area.querySelectorAll('.slot').forEach(b=>{
+    b.addEventListener('click',()=>{
+      area.querySelectorAll('.slot.sel').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel'); selectedTime=b.dataset.t; updateSummary();
+    });
+  });
+}
+
+function fmtDate(d){
+  return `${d.getDate()} ${PL_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+}
+function updateSummary(){
+  const sum = $('bkSummary'), main=$('bkSummaryMain'), sub=$('bkSummarySub');
+  if(selectedDate && selectedTime){
+    sum.classList.remove('empty');
+    main.textContent = `${fmtDate(selectedDate)}, godz. ${selectedTime}`;
+    sub.textContent = 'Konsultacja diagnostyczna · ok. '+CONFIG.slotMinutes+' min';
+    $('bkDate').value = fmtDate(selectedDate);
+    $('bkTime').value = selectedTime;
+  } else {
+    sum.classList.add('empty');
+    main.textContent = selectedDate ? `${fmtDate(selectedDate)} — wybierz godzinę` : 'Wybierz dzień i godzinę';
+    sub.textContent = 'Twój termin pojawi się tutaj';
+  }
+  validate();
+}
+
+/* nawigacja miesięcy */
+$('calPrev').addEventListener('click',()=>{ if(--viewMonth<0){viewMonth=11;viewYear--;} renderCalendar(); });
+$('calNext').addEventListener('click',()=>{ if(++viewMonth>11){viewMonth=0;viewYear++;} renderCalendar(); });
+
+/* walidacja + wysyłka */
+function validate(){
+  const ok = selectedDate && selectedTime &&
+    $('bkName').value.trim().length>1 &&
+    $('bkPhone').value.trim().length>5 &&
+    /\S+@\S+\.\S+/.test($('bkEmail').value) &&
+    $('bkConsent').checked;
+  $('bkSubmit').disabled = !ok;
+  return ok;
+}
+['bkName','bkPhone','bkEmail','bkConsent'].forEach(id=>{
+  $(id).addEventListener('input',validate); $(id).addEventListener('change',validate);
+});
+
+$('bookingForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  if(!validate()) return;
+  const btn = $('bkSubmit');
+  btn.disabled = true; btn.innerHTML = 'Rezerwuję…';
+
+  const payload = {
+    imie: $('bkName').value.trim(),
+    telefon: $('bkPhone').value.trim(),
+    email: $('bkEmail').value.trim(),
+    strefa: $('bkNote').value.trim() || '—',
+    termin_data: $('bkDate').value,
+    termin_godzina: $('bkTime').value,
+    _subject: `Nowa rezerwacja: ${$('bkDate').value} ${$('bkTime').value} — Remedy`,
+    _replyto: $('bkEmail').value.trim()
+  };
+
+  try{
+    if(CONFIG.formspreeEndpoint){
+      const res = await fetch(CONFIG.formspreeEndpoint,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error('send failed');
+    } else {
+      // tryb testowy bez endpointu — symulacja
+      await new Promise(r=>setTimeout(r,600));
+      console.log('[TEST] Rezerwacja (brak Formspree):', payload);
+    }
+    showSuccess();
+  }catch(err){
+    btn.disabled=false; btn.innerHTML='Rezerwuję termin <span class="arr">→</span>';
+    alert('Nie udało się wysłać rezerwacji. Zadzwoń do nas: +48 500 000 000');
+  }
+});
+
+function showSuccess(){
+  $('bookingForm').style.display='none';
+  $('bkSummary').style.display='none';
+  document.querySelector('.form-side .step-lbl').style.display='none';
+  $('bkRecap').textContent = `${$('bkDate').value}, godz. ${$('bkTime').value}`;
+  $('bkSuccess').classList.add('show');
+  $('bkSuccess').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* ── FAQ accordion ── */
+document.querySelectorAll('.q-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const item=b.closest('.q-item'); const ans=item.querySelector('.q-ans');
+    const open=item.classList.contains('open');
+    document.querySelectorAll('.q-item.open').forEach(o=>{o.classList.remove('open');o.querySelector('.q-ans').style.maxHeight=null;});
+    if(!open){ item.classList.add('open'); ans.style.maxHeight=ans.scrollHeight+'px'; }
+  });
+});
+
+/* ── ZDJĘCIA / MEDIA (photo-ready) — czyta CONFIG.media, sam chowa puste sloty ── */
+const M = CONFIG.media || {};
+// HERO: wideo > zdjęcie > nic
+(function(){
+  const host=$('heroMedia'); if(!host) return;
+  if(M.heroVideo){
+    host.innerHTML=`<div class="hero-video" role="button" tabindex="0" aria-label="Odtwórz film">`
+      +`<div class="vp" style="background-image:url('https://img.youtube.com/vi/${M.heroVideo}/maxresdefault.jpg')"></div>`
+      +`<button class="play" aria-hidden="true"></button><div class="hint">Zajrzyj do gabinetu</div></div>`;
+    const box=host.querySelector('.hero-video');
+    const play=()=>{ box.innerHTML=`<iframe src="https://www.youtube.com/embed/${M.heroVideo}?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`; };
+    box.addEventListener('click',play);
+    box.addEventListener('keydown',e=>{ if(e.key==='Enter') play(); });
+  } else if(M.heroImage){
+    host.innerHTML=`<img class="ph-img" src="${M.heroImage}" alt="Wnętrze gabinetu">`;
+  } // brak obu -> .hero-media:empty {display:none}
+})();
+// PORTRET w panelu konsultacji
+(function(){
+  const cr=$('consultRight'); if(!cr || !M.portret) return;
+  cr.classList.add('has-photo');
+  const bg=document.createElement('div'); bg.className='ph-bg';
+  bg.style.backgroundImage=`url('${M.portret}')`;
+  cr.prepend(bg);
+})();
+// GALERIA „Zajrzyj do środka"
+(function(){
+  const sec=$('galeria'), grid=$('galleryGrid');
+  const imgs=(M.galeria||[]).filter(Boolean);
+  if(!sec || !grid || !imgs.length) return;
+  sec.hidden=false;
+  grid.innerHTML=imgs.slice(0,6).map(src=>`<div class="g"><img class="ph-img" src="${src}" alt="Zdjęcie z salonu"></div>`).join('');
+})();
+
+/* ── reveal on scroll ── */
+const io=new IntersectionObserver((ents)=>{
+  ents.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.r').forEach(el=>io.observe(el));
+
+/* ── init ── */
+$('yr').textContent=new Date().getFullYear();
+renderCalendar();
+</script>
+</body>
+</html>
